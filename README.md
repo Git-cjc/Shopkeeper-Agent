@@ -74,6 +74,51 @@
 - 想做一个比简单模型调用更接近实际开发的 AI Agent 项目。
 - 想把项目写进简历，并且能说清楚数据层、检索层、智能体层、服务层和前端层分别做了什么。
 
+## 🚀 求职化包装
+
+如果你想把这个项目作为 `AI 应用后端` 方向的代表作来讲，建议先看这几份材料：
+
+- [项目总览](file:///Users/cjc/Documents/Code/AI-Agent-Learning/shopkeeper-agent/docs/project-overview.md)
+- [面试提纲](file:///Users/cjc/Documents/Code/AI-Agent-Learning/shopkeeper-agent/docs/interview-notes.md)
+- [演示脚本](file:///Users/cjc/Documents/Code/AI-Agent-Learning/shopkeeper-agent/docs/demo-scenarios.md)
+
+### 我做了哪些二次沉淀
+
+在完成整套项目复现的基础上，我额外补了几类更适合求职表达的内容：
+
+- 分章节学习文档与关键代码注释，帮助把主链路真正讲清楚
+- 面向外部读者的项目总览，强调系统架构、调用链路和技术取舍
+- 面向面试的高频问题提纲，方便在 3 到 5 分钟内稳定讲解
+- 固定演示问题脚本，方便现场展示问数链路、SSE 进度和日志追踪能力
+
+### 这个项目解决了什么问题
+
+这个项目的核心不是“让模型直接生成一条 SQL”，而是把企业问数拆成一条更稳的工程链路：
+
+- 用元数据知识库保存权威表、字段和指标信息
+- 用 `Qdrant + Elasticsearch` 做字段、指标、字段取值混合检索
+- 用 `LangGraph` 把召回、过滤、SQL 生成、校验、修正、执行编排成工作流
+- 用 `FastAPI + SSE` 把过程进度、结果和错误稳定交付给前端
+- 用 `request_id + ContextVar + loguru` 支持并发请求日志追踪
+
+### 下一步工程升级计划
+
+为了把它继续往“更像企业内部问数系统”的方向推进，下一阶段我会优先补两块：
+
+#### 1. SQL 安全防护
+
+- 只读校验：限制只允许 `SELECT` / `WITH ... SELECT`
+- 危险关键词拦截：拦截 `INSERT`、`UPDATE`、`DELETE`、`DROP`、`ALTER`、`TRUNCATE`
+- 结果行数限制：避免单次查询返回过大结果集
+- 超时控制：避免慢 SQL 长时间占用资源
+
+#### 2. 问数评测体系
+
+- 先设计 20 条高质量评测问题，再扩展到 50 条
+- 统计 SQL 生成成功率、SQL 执行成功率和结果正确率
+- 对字段、指标和值域召回质量做人工抽样检查
+- 逐步沉淀成可重复运行的离线评测脚本
+
 ## 🏗️ 系统架构
 
 ![电商问数系统架构图：前端通过 FastAPI 和 SSE 连接后端，LangGraph 问数智能体基于 Jieba、MySQL、Qdrant、Elasticsearch 和 LLM 完成召回、SQL 生成校验执行与结果返回](docs/images/shopkeeper-agent-system-architecture.svg)
