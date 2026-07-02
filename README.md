@@ -1,3 +1,14 @@
+## 项目说明
+
+本仓库为本人学习 AI Agent 工程开发时，对 didilili/shopkeeper-agent 项目的复现与学习记录。原项目遵循 MIT License，版权归原作者 didilili 所有。
+
+原项目地址：https://github.com/didilili/shopkeeper-agent
+
+本人主要学习目标：
+- 理解 LangGraph 多节点工作流编排
+- 理解自然语言问数到 SQL 生成、校验、执行的完整链路
+- 掌握 FastAPI + Qdrant + Elasticsearch + MySQL 的 Agent 工程集成
+- 在原项目基础上补充本地部署记录、源码解读和后续功能改造
 <div align='center'>
   <h1 style="margin-top: 15px;">「电商问数」智能数据分析 Agent</h1>
   <h4><b>shopkeeper-agent</b></h4>
