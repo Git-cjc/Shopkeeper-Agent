@@ -24,6 +24,8 @@ log_format = (
 
 def inject_request_id(record):
     """把上下文中的 request_id 注入到每条日志的 extra 字段"""
+    # record 可以理解成“日志输出前的一条结构化记录”。
+    # extra 是 Loguru 预留的“附加字段区域”，适合放 request_id 这类公共信息。
     request_id = request_id_ctx_var.get()
     record["extra"]["request_id"] = request_id
 
@@ -31,6 +33,9 @@ def inject_request_id(record):
 # 移除 Loguru 默认的输出目标，避免和项目自定义配置重复打印
 logger.remove()
 
+# patch 可以翻成“给日志器打一层统一补丁”：
+# 每次 logger.info/error(...) 真正输出前，都会先执行 inject_request_id。
+# 这样业务代码就不用手动传 request_id 了。
 # 生成带 request_id 注入能力的 logger，后续业务代码统一使用这个实例
 logger = logger.patch(inject_request_id)
 

@@ -45,9 +45,12 @@ class QueryService:
     async def query(self, query: str):
         """执行一次问数工作流，并逐段产出 SSE 消息"""
 
-        # State 只放会被图节点读写和合并的业务数据，外部工具对象不塞进 State
+        # State 可以翻成“状态”：
+        # 它保存的是这次问数任务过程中会不断变化的业务数据。
+        # 外部工具对象不适合放进 State。
         state = DataAgentState(query=query)
-        # Context 保存本次图执行需要复用的外部依赖，节点通过 runtime.context 读取
+        # Context 可以翻成“上下文”：
+        # 它保存的是本次图执行需要复用的外部依赖，节点通过 runtime.context 读取。
         context = DataAgentContext(
             column_qdrant_repository=self.column_qdrant_repository,
             embedding_client=self.embedding_client,
@@ -57,14 +60,18 @@ class QueryService:
             dw_mysql_repository=self.dw_mysql_repository,
         )
         try:
-            # stream_mode="custom" 对应节点内部 writer(...) 写出的进度消息
+            # stream_mode="custom" 对应节点内部 writer(...) 写出的进度消息。
+            # 这一层做的是“把内部 LangGraph 流，翻译成对外 SSE 流”。
             async for chunk in graph.astream(
                 input=state, context=context, stream_mode="custom"
             ):
-                # SSE 要求每条消息以 data: 开头，并以两个换行符结束
+                # SSE（服务端推送事件）要求每条消息以 data: 开头，并以两个换行符结束。
+                # chunk 可以理解成“图执行过程中冒出来的一小段结构化消息”。
                 # ensure_ascii=False 保留中文进度文案，default=str 兜底处理日期等非 JSON 类型
                 yield f"data: {json.dumps(chunk, ensure_ascii=False, default=str)}\n\n"
         except Exception as e:
-            # 流式接口已经开始返回后不能再改 HTTP 状态码，因此把异常也包装成一条 SSE 消息
+            # 流式接口已经开始返回后不能再改 HTTP 状态码，因此把异常也包装成一条 SSE 消息。
+            # 这就是流式接口和普通 JSON 接口最不一样的地方之一。
+            # error 这里表示“整次查询最终失败的原因”，和单个步骤的 progress error 不是一回事。
             error = {"type": "error", "message": str(e)}
             yield f"data: {json.dumps(error, ensure_ascii=False, default=str)}\n\n"

@@ -23,13 +23,17 @@ query_router = APIRouter()
 async def query_handler(
     # 请求体参数：FastAPI 会把前端 JSON 自动解析成 QuerySchema
     query: QuerySchema,
-    # 服务依赖：FastAPI 会调用 get_query_service，递归组装它所需的仓储和客户端
+    # 服务依赖：FastAPI 会调用 get_query_service，递归组装它所需的仓储和客户端。
+    # 这里的 Depends 就是“依赖注入”，意思是：路由函数不负责自己造对象。
     query_service: Annotated[QueryService, Depends(get_query_service)],
 ):
     """接收用户自然语言问题，并流式返回 LangGraph 工作流输出"""
 
+    # 第16章和第15章最大的差别就在这里：
+    # 现在返回的已经不是 fake_streamer()，而是真实 QueryService.query(...) 驱动的问数工作流。
     return StreamingResponse(
         # query.query 是用户问题字符串；QueryService.query 返回异步生成器供响应逐段消费
         query_service.query(query.query),
+        # text/event-stream 是 SSE（Server-Sent Events，服务端推送事件）协议要求的响应类型。
         media_type="text/event-stream",
     )
