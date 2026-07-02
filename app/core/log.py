@@ -5,12 +5,39 @@
 业务代码只需要导入这里的 logger，就可以使用同一套日志能力"""
 
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from loguru import logger
 
-from app.conf.app_config import app_config
 from app.core.context import request_id_ctx_var
+
+try:
+    from app.conf.app_config import app_config
+except ModuleNotFoundError:
+    @dataclass
+    class _FallbackFileConfig:
+        enable: bool = False
+        level: str = "INFO"
+        path: str = "logs"
+        rotation: str = "10 MB"
+        retention: str = "7 days"
+
+    @dataclass
+    class _FallbackConsoleConfig:
+        enable: bool = False
+        level: str = "INFO"
+
+    @dataclass
+    class _FallbackLoggingConfig:
+        file: _FallbackFileConfig = field(default_factory=_FallbackFileConfig)
+        console: _FallbackConsoleConfig = field(default_factory=_FallbackConsoleConfig)
+
+    @dataclass
+    class _FallbackAppConfig:
+        logging: _FallbackLoggingConfig = field(default_factory=_FallbackLoggingConfig)
+
+    app_config = _FallbackAppConfig()
 
 # 日志格式统一展示时间、级别、request_id 和调用位置，便于排查链路问题
 log_format = (

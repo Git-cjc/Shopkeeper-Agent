@@ -23,6 +23,18 @@ db_dw:
   password: dili123
   database: dw
 
+sql_guard:
+  enable: true
+  max_limit: 200
+  timeout_seconds: 5
+  blocked_keywords:
+    - insert
+    - update
+    - delete
+    - drop
+    - alter
+    - truncate
+
 qdrant:
   host: localhost
   port: 6333
