@@ -7,7 +7,7 @@ State 是 LangGraph 各节点之间传递和更新的共享数据
 SQL 生成闭环会继续写入候选 SQL 以及校验错误信息，用于控制校正或执行分支
 """
 
-from typing import TypedDict
+from typing import NotRequired, Required, TypedDict
 
 from app.entities.column_info import ColumnInfo
 from app.entities.metric_info import MetricInfo
@@ -60,20 +60,26 @@ class DBInfoState(TypedDict):
     version: str
 
 
+type SQLExecutionRow = dict[str, object]
+type SQLExecutionResult = list[SQLExecutionRow]
+
+
 class DataAgentState(TypedDict):
     """一次问数链路中的核心状态"""
 
-    query: str  # 用户输入的查询
-    keywords: list[str]  # 抽取的关键词
-    retrieved_column_infos: list[ColumnInfo]  # 检索到的字段信息
-    retrieved_metric_infos: list[MetricInfo]  # 检索到的指标信息
-    retrieved_value_infos: list[ValueInfo]  # 检索到的取值信息
+    query: Required[str]  # 用户输入的查询
+    keywords: NotRequired[list[str]]  # 抽取的关键词
+    retrieved_column_infos: NotRequired[list[ColumnInfo]]  # 检索到的字段信息
+    retrieved_metric_infos: NotRequired[list[MetricInfo]]  # 检索到的指标信息
+    retrieved_value_infos: NotRequired[list[ValueInfo]]  # 检索到的取值信息
 
-    table_infos: list[TableInfoState]  # 合并和补齐后的表结构上下文
-    metric_infos: list[MetricInfoState]  # 合并后的指标上下文
-    date_info: DateInfoState  # 当前日期 星期和季度信息
-    db_info: DBInfoState  # 数据库方言和版本信息
+    table_infos: NotRequired[list[TableInfoState]]  # 合并和补齐后的表结构上下文
+    metric_infos: NotRequired[list[MetricInfoState]]  # 合并后的指标上下文
+    date_info: NotRequired[DateInfoState]  # 当前日期 星期和季度信息
+    db_info: NotRequired[DBInfoState]  # 数据库方言和版本信息
 
-    sql: str  # 生成或校正后的SQL
+    sql: NotRequired[str]  # 生成或校正后的SQL
 
-    error: str  # 校验SQL时出现的错误信息
+    error: NotRequired[str | None]  # 校验SQL时出现的错误信息
+    execution_result: NotRequired[SQLExecutionResult | None]  # SQL 执行成功后的结果
+    execution_error: NotRequired[str | None]  # SQL 执行失败时的错误信息

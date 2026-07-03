@@ -5,14 +5,19 @@ SQL 执行节点
 它是当前 SQL 闭环的结束节点，执行完成后流程进入 END。
 """
 
+from typing import TypedDict
+
 from langgraph.runtime import Runtime
 
 from app.agent.context import DataAgentContext
-from app.agent.state import DataAgentState
 from app.core.log import logger
 
 
-async def run_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]):
+class RunSQLInputState(TypedDict):
+    sql: str
+
+
+async def run_sql(state: RunSQLInputState, runtime: Runtime[DataAgentContext]):
     """执行 SQL 并产出最终问数结果"""
 
     writer = runtime.stream_writer
@@ -29,8 +34,11 @@ async def run_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]):
         logger.info(f"SQL执行结果：{result}")
         writer({"type": "progress", "step": step, "status": "success"})
         writer({"type": "result", "data": result})
+        return {"execution_result": result, "execution_error": None}
 
     except Exception as e:
+        error_message = str(e)
         logger.error(f"{step} failed: {e}")
         writer({"type": "progress", "step": step, "status": "error"})
-        raise
+        writer({"type": "error", "message": error_message})
+        return {"execution_result": None, "execution_error": error_message}

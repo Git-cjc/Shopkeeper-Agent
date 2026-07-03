@@ -1,0 +1,157 @@
+{
+  "total_cases": 20,
+  "sql_accuracy": 1.0,
+  "strict_sql_accuracy": 0.35,
+  "alias_consistency_rate": 0.35,
+  "execution_success_rate": 1.0,
+  "table_recall_coverage": 1.0,
+  "column_recall_coverage": 0.75,
+  "metric_recall_coverage": 1.0,
+  "value_recall_coverage": 1.0,
+  "full_recall_rate": 0.75,
+  "by_tag": {
+    "aggregate": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.3333333333333333,
+      "alias_consistency_rate": 0.3333333333333333,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 1.0,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 1.0
+    },
+    "brand": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.75,
+      "alias_consistency_rate": 0.75,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.5,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.5
+    },
+    "category": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.3333333333333333,
+      "alias_consistency_rate": 0.3333333333333333,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.6666666666666666,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.6666666666666666
+    },
+    "distinct_user": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.0,
+      "alias_consistency_rate": 0.0,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 1.0,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 1.0
+    },
+    "filter": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.625,
+      "alias_consistency_rate": 0.625,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.625,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.625
+    },
+    "gmv": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.5384615384615384,
+      "alias_consistency_rate": 0.5384615384615384,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.6153846153846154,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.6153846153846154
+    },
+    "group_by": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.1111111111111111,
+      "alias_consistency_rate": 0.1111111111111111,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.7777777777777778,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.7777777777777778
+    },
+    "member_level": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.25,
+      "alias_consistency_rate": 0.25,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 1.0,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 1.0
+    },
+    "metric": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 1.0,
+      "alias_consistency_rate": 1.0,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 1.0,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 1.0
+    },
+    "quantity": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.0,
+      "alias_consistency_rate": 0.0,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 1.0,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 1.0
+    },
+    "region": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.16666666666666666,
+      "alias_consistency_rate": 0.16666666666666666,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.5,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.5
+    },
+    "time": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.25,
+      "alias_consistency_rate": 0.25,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.25,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.25
+    },
+    "topn": {
+      "sql_accuracy": 1.0,
+      "strict_sql_accuracy": 0.2,
+      "alias_consistency_rate": 0.2,
+      "execution_success_rate": 1.0,
+      "table_recall_coverage": 1.0,
+      "column_recall_coverage": 0.8,
+      "metric_recall_coverage": 1.0,
+      "value_recall_coverage": 1.0,
+      "full_recall_rate": 0.8
+    }
+  }
+}

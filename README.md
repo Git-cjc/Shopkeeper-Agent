@@ -281,6 +281,27 @@ pnpm install
 pnpm dev
 ```
 
+## 问数评测
+
+完成基础服务启动和元数据知识库构建后，可以直接运行离线评测：
+
+```bash
+uv run python -m app.scripts.evaluate_query_set
+```
+
+默认读取 `app/evaluation/datasets/query_eval_set.yaml`，并输出：
+
+- `reports/query-eval/summary.json`
+- `reports/query-eval/summary.md`
+- `reports/query-eval/details.json`
+
+如需只跑某一条或某一类题目，可用：
+
+```bash
+uv run python -m app.scripts.evaluate_query_set --case-id q004_gmv_east_china
+uv run python -m app.scripts.evaluate_query_set --tag topn
+```
+
 前端默认通过 Vite 代理把 `/api` 转发到 `http://127.0.0.1:8000`。如需修改：
 
 ```bash

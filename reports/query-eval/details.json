@@ -1,0 +1,1396 @@
+[
+  {
+    "case_id": "q001_total_gmv",
+    "question": "总GMV是多少？",
+    "generated_sql": "SELECT SUM(order_amount) AS GMV FROM fact_order",
+    "reference_sql": "SELECT SUM(order_amount) AS gmv\nFROM fact_order;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "GMV": 279159.5
+      }
+    ],
+    "reference_result": [
+      {
+        "gmv": 279159.5
+      }
+    ],
+    "retrieved_table_ids": [
+      "fact_order"
+    ],
+    "retrieved_column_ids": [
+      "fact_order.order_amount",
+      "fact_order.order_quantity"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "aggregate",
+      "metric",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q002_total_sales_quantity",
+    "question": "总销量是多少？",
+    "generated_sql": "SELECT SUM(order_quantity) AS 总销量 FROM fact_order",
+    "reference_sql": "SELECT SUM(order_quantity) AS total_quantity\nFROM fact_order;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "总销量": "622"
+      }
+    ],
+    "reference_result": [
+      {
+        "total_quantity": "622"
+      }
+    ],
+    "retrieved_table_ids": [
+      "fact_order"
+    ],
+    "retrieved_column_ids": [
+      "fact_order.order_quantity",
+      "fact_order.order_amount"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "aggregate",
+      "quantity"
+    ]
+  },
+  {
+    "case_id": "q003_distinct_customer_count",
+    "question": "下单用户数有多少？",
+    "generated_sql": "SELECT COUNT(DISTINCT customer_id) AS 下单用户数 FROM fact_order",
+    "reference_sql": "SELECT COUNT(DISTINCT customer_id) AS customer_count\nFROM fact_order;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "下单用户数": 20
+      }
+    ],
+    "reference_result": [
+      {
+        "customer_count": 20
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_customer",
+      "fact_order",
+      "dim_product",
+      "dim_region"
+    ],
+    "retrieved_column_ids": [
+      "dim_customer.member_level",
+      "dim_customer.customer_id",
+      "fact_order.customer_id",
+      "dim_customer.customer_name",
+      "fact_order.order_quantity",
+      "fact_order.order_amount",
+      "fact_order.date_id",
+      "fact_order.order_id",
+      "dim_product.product_id",
+      "fact_order.product_id",
+      "dim_region.province"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "aggregate",
+      "distinct_user"
+    ]
+  },
+  {
+    "case_id": "q004_gmv_east_china",
+    "question": "华东地区的GMV是多少？",
+    "generated_sql": "SELECT SUM(fo.order_amount) AS GMV FROM fact_order fo JOIN dim_region dr ON fo.region_id = dr.region_id WHERE dr.region_name = '华东'",
+    "reference_sql": "SELECT SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_region AS r ON f.region_id = r.region_id\nWHERE r.region_name = '华东';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "GMV": 107373.0
+      }
+    ],
+    "reference_result": [
+      {
+        "gmv": 107373.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_region",
+      "fact_order",
+      "dim_date"
+    ],
+    "retrieved_column_ids": [
+      "dim_region.region_name",
+      "dim_region.province",
+      "dim_region.country",
+      "dim_region.region_id",
+      "fact_order.region_id",
+      "dim_date.year",
+      "dim_date.month",
+      "fact_order.date_id",
+      "dim_date.date_id",
+      "fact_order.order_amount",
+      "fact_order.order_quantity"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_region.region_name.华东"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "region",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q005_gmv_gold_members",
+    "question": "黄金会员的GMV是多少？",
+    "generated_sql": "SELECT SUM(fo.order_amount) AS GMV FROM fact_order fo JOIN dim_customer dc ON fo.customer_id = dc.customer_id WHERE dc.member_level = '黄金'",
+    "reference_sql": "SELECT SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_customer AS c ON f.customer_id = c.customer_id\nWHERE c.member_level = '黄金';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "GMV": 100178.5
+      }
+    ],
+    "reference_result": [
+      {
+        "gmv": 100178.5
+      }
+    ],
+    "retrieved_table_ids": [
+      "fact_order",
+      "dim_region",
+      "dim_customer"
+    ],
+    "retrieved_column_ids": [
+      "fact_order.order_amount",
+      "fact_order.order_quantity",
+      "fact_order.order_id",
+      "fact_order.date_id",
+      "dim_region.province",
+      "dim_customer.member_level"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_customer.member_level.黄金"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "member_level",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q006_gmv_apple_brand",
+    "question": "苹果品牌的GMV是多少？",
+    "generated_sql": "SELECT SUM(fo.order_amount) AS GMV FROM fact_order fo JOIN dim_product dp ON fo.product_id = dp.product_id WHERE dp.brand = '苹果'",
+    "reference_sql": "SELECT SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nWHERE p.brand = '苹果';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "GMV": 71992.0
+      }
+    ],
+    "reference_result": [
+      {
+        "gmv": 71992.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_product",
+      "dim_customer",
+      "fact_order",
+      "dim_region"
+    ],
+    "retrieved_column_ids": [
+      "dim_product.brand",
+      "dim_product.product_name",
+      "dim_customer.customer_name",
+      "dim_product.product_id",
+      "fact_order.product_id",
+      "dim_region.country",
+      "dim_product.category",
+      "fact_order.order_amount",
+      "fact_order.order_quantity"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_product.brand.苹果"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "brand",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q007_gmv_phone_category",
+    "question": "手机数码品类的GMV是多少？",
+    "generated_sql": "SELECT SUM(fo.order_amount) AS GMV FROM fact_order fo JOIN dim_product dp ON fo.product_id = dp.product_id WHERE dp.category = '手机数码'",
+    "reference_sql": "SELECT SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nWHERE p.category = '手机数码';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "GMV": 194771.0
+      }
+    ],
+    "reference_result": [
+      {
+        "gmv": 194771.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_product",
+      "fact_order",
+      "dim_region",
+      "dim_date"
+    ],
+    "retrieved_column_ids": [
+      "dim_product.category",
+      "dim_product.brand",
+      "dim_product.product_name",
+      "fact_order.order_quantity",
+      "dim_region.region_name",
+      "dim_date.date_id",
+      "fact_order.date_id",
+      "dim_product.product_id",
+      "fact_order.product_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_product.category.手机数码"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": false,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": false,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "category",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q008_top3_brands_by_gmv",
+    "question": "按GMV排序，品牌前三名是什么？",
+    "generated_sql": "SELECT dp.brand, SUM(fo.order_amount) AS GMV FROM fact_order fo JOIN dim_product dp ON fo.product_id = dp.product_id GROUP BY dp.brand ORDER BY GMV DESC LIMIT 3",
+    "reference_sql": "SELECT p.brand, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nGROUP BY p.brand\nORDER BY gmv DESC\nLIMIT 3;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "brand": "苹果",
+        "GMV": 71992.0
+      },
+      {
+        "brand": "三星",
+        "GMV": 56994.0
+      },
+      {
+        "brand": "华为",
+        "GMV": 55992.0
+      }
+    ],
+    "reference_result": [
+      {
+        "brand": "苹果",
+        "gmv": 71992.0
+      },
+      {
+        "brand": "三星",
+        "gmv": 56994.0
+      },
+      {
+        "brand": "华为",
+        "gmv": 55992.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_product",
+      "dim_customer",
+      "fact_order",
+      "dim_region"
+    ],
+    "retrieved_column_ids": [
+      "dim_product.brand",
+      "dim_product.product_name",
+      "dim_customer.customer_name",
+      "dim_product.product_id",
+      "fact_order.product_id",
+      "dim_region.country",
+      "dim_product.category",
+      "fact_order.order_quantity",
+      "fact_order.order_id",
+      "fact_order.order_amount"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_product.brand.三星"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "topn",
+      "brand",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q009_top5_categories_by_quantity",
+    "question": "按销量排序，品类前五名是什么？",
+    "generated_sql": "SELECT dp.category, SUM(fo.order_quantity) AS 销量 FROM dim_product dp JOIN fact_order fo ON dp.product_id = fo.product_id GROUP BY dp.category ORDER BY 销量 DESC LIMIT 5",
+    "reference_sql": "SELECT p.category, SUM(f.order_quantity) AS total_quantity\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nGROUP BY p.category\nORDER BY total_quantity DESC\nLIMIT 5;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "category": "休闲零食",
+        "销量": "298"
+      },
+      {
+        "category": "食品饮料",
+        "销量": "246"
+      },
+      {
+        "category": "手机数码",
+        "销量": "29"
+      },
+      {
+        "category": "家用电器",
+        "销量": "19"
+      },
+      {
+        "category": "服饰",
+        "销量": "18"
+      }
+    ],
+    "reference_result": [
+      {
+        "category": "休闲零食",
+        "total_quantity": "298"
+      },
+      {
+        "category": "食品饮料",
+        "total_quantity": "246"
+      },
+      {
+        "category": "手机数码",
+        "total_quantity": "29"
+      },
+      {
+        "category": "家用电器",
+        "total_quantity": "19"
+      },
+      {
+        "category": "服饰",
+        "total_quantity": "18"
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_product",
+      "fact_order",
+      "dim_region",
+      "dim_customer"
+    ],
+    "retrieved_column_ids": [
+      "dim_product.category",
+      "dim_product.brand",
+      "dim_product.product_name",
+      "fact_order.order_quantity",
+      "dim_region.region_name",
+      "fact_order.order_amount",
+      "dim_customer.customer_name",
+      "fact_order.order_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "topn",
+      "category",
+      "quantity"
+    ]
+  },
+  {
+    "case_id": "q010_gmv_q1_by_region",
+    "question": "统计 Q1 各地区的GMV。",
+    "generated_sql": "SELECT d.region_name AS 地区, SUM(f.order_amount) AS GMV FROM fact_order f JOIN dim_region d ON f.region_id = d.region_id JOIN dim_date t ON f.date_id = t.date_id WHERE t.quarter = 'Q1' GROUP BY d.region_name",
+    "reference_sql": "SELECT r.region_name, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_region AS r ON f.region_id = r.region_id\nJOIN dim_date AS d ON f.date_id = d.date_id\nWHERE d.quarter = 'Q1'\nGROUP BY r.region_name;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "地区": "华南",
+        "GMV": 70202.0
+      },
+      {
+        "地区": "华东",
+        "GMV": 107373.0
+      },
+      {
+        "地区": "华北",
+        "GMV": 41099.5
+      },
+      {
+        "地区": "西南",
+        "GMV": 31528.0
+      },
+      {
+        "地区": "华中",
+        "GMV": 28957.0
+      }
+    ],
+    "reference_result": [
+      {
+        "region_name": "华南",
+        "gmv": 70202.0
+      },
+      {
+        "region_name": "华东",
+        "gmv": 107373.0
+      },
+      {
+        "region_name": "华北",
+        "gmv": 41099.5
+      },
+      {
+        "region_name": "西南",
+        "gmv": 31528.0
+      },
+      {
+        "region_name": "华中",
+        "gmv": 28957.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_region",
+      "fact_order",
+      "dim_date"
+    ],
+    "retrieved_column_ids": [
+      "dim_region.region_name",
+      "dim_region.province",
+      "dim_region.country",
+      "dim_region.region_id",
+      "fact_order.region_id",
+      "dim_date.year",
+      "dim_date.month",
+      "fact_order.date_id",
+      "dim_date.date_id",
+      "fact_order.order_quantity"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_date.quarter.Q1"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": false,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": false,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "time",
+      "region",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q011_distinct_customers_by_member_level",
+    "question": "按会员等级统计下单用户数。",
+    "generated_sql": "SELECT d.member_level, COUNT(DISTINCT f.customer_id) AS 下单用户数 FROM dim_customer d INNER JOIN fact_order f ON d.customer_id = f.customer_id GROUP BY d.member_level",
+    "reference_sql": "SELECT c.member_level, COUNT(DISTINCT f.customer_id) AS customer_count\nFROM fact_order AS f\nJOIN dim_customer AS c ON f.customer_id = c.customer_id\nGROUP BY c.member_level;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "member_level": "白银",
+        "下单用户数": 5
+      },
+      {
+        "member_level": "铂金",
+        "下单用户数": 4
+      },
+      {
+        "member_level": "青铜",
+        "下单用户数": 5
+      },
+      {
+        "member_level": "黄金",
+        "下单用户数": 6
+      }
+    ],
+    "reference_result": [
+      {
+        "member_level": "白银",
+        "customer_count": 5
+      },
+      {
+        "member_level": "铂金",
+        "customer_count": 4
+      },
+      {
+        "member_level": "青铜",
+        "customer_count": 5
+      },
+      {
+        "member_level": "黄金",
+        "customer_count": 6
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_customer",
+      "dim_region",
+      "fact_order",
+      "dim_date",
+      "dim_product"
+    ],
+    "retrieved_column_ids": [
+      "dim_customer.member_level",
+      "dim_region.province",
+      "dim_customer.customer_id",
+      "fact_order.customer_id",
+      "dim_customer.customer_name",
+      "fact_order.order_quantity",
+      "fact_order.order_amount",
+      "dim_date.date_id",
+      "fact_order.date_id",
+      "fact_order.order_id",
+      "dim_product.product_id",
+      "fact_order.product_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "member_level",
+      "distinct_user"
+    ]
+  },
+  {
+    "case_id": "q012_quantity_by_category",
+    "question": "按品类统计销量。",
+    "generated_sql": "SELECT dp.category, SUM(fo.order_quantity) AS 销量 FROM fact_order fo JOIN dim_product dp ON fo.product_id = dp.product_id GROUP BY dp.category",
+    "reference_sql": "SELECT p.category, SUM(f.order_quantity) AS total_quantity\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nGROUP BY p.category;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "category": "手机数码",
+        "销量": "29"
+      },
+      {
+        "category": "食品饮料",
+        "销量": "246"
+      },
+      {
+        "category": "鞋靴",
+        "销量": "12"
+      },
+      {
+        "category": "休闲零食",
+        "销量": "298"
+      },
+      {
+        "category": "服饰",
+        "销量": "18"
+      },
+      {
+        "category": "家用电器",
+        "销量": "19"
+      }
+    ],
+    "reference_result": [
+      {
+        "category": "手机数码",
+        "total_quantity": "29"
+      },
+      {
+        "category": "食品饮料",
+        "total_quantity": "246"
+      },
+      {
+        "category": "鞋靴",
+        "total_quantity": "12"
+      },
+      {
+        "category": "休闲零食",
+        "total_quantity": "298"
+      },
+      {
+        "category": "服饰",
+        "total_quantity": "18"
+      },
+      {
+        "category": "家用电器",
+        "total_quantity": "19"
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_product",
+      "fact_order",
+      "dim_region"
+    ],
+    "retrieved_column_ids": [
+      "dim_product.category",
+      "dim_product.brand",
+      "dim_product.product_name",
+      "fact_order.order_quantity",
+      "dim_region.region_name",
+      "fact_order.order_amount"
+    ],
+    "retrieved_metric_ids": [
+      "GMV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "category",
+      "quantity"
+    ]
+  },
+  {
+    "case_id": "q013_top2_regions_by_gmv_q1",
+    "question": "Q1 的 GMV 最高的两个地区是哪里？",
+    "generated_sql": "SELECT r.region_name AS 地区, SUM(f.order_amount) AS GMV FROM fact_order f JOIN dim_region r ON f.region_id = r.region_id GROUP BY r.region_name ORDER BY GMV DESC LIMIT 2",
+    "reference_sql": "SELECT r.region_name, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_region AS r ON f.region_id = r.region_id\nJOIN dim_date AS d ON f.date_id = d.date_id\nWHERE d.quarter = 'Q1'\nGROUP BY r.region_name\nORDER BY gmv DESC\nLIMIT 2;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "地区": "华东",
+        "GMV": 107373.0
+      },
+      {
+        "地区": "华南",
+        "GMV": 70202.0
+      }
+    ],
+    "reference_result": [
+      {
+        "region_name": "华东",
+        "gmv": 107373.0
+      },
+      {
+        "region_name": "华南",
+        "gmv": 70202.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_region",
+      "fact_order",
+      "dim_date"
+    ],
+    "retrieved_column_ids": [
+      "dim_region.region_name",
+      "dim_region.province",
+      "dim_region.country",
+      "dim_region.region_id",
+      "fact_order.region_id",
+      "dim_date.year",
+      "dim_date.month",
+      "fact_order.date_id",
+      "dim_date.date_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_date.quarter.Q1"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": false,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": false,
+    "error_message": null,
+    "tags": [
+      "topn",
+      "time",
+      "region",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q014_gmv_by_brand_in_east_china",
+    "question": "华东地区各品牌的GMV分别是多少？",
+    "generated_sql": "SELECT d.brand AS 品牌, SUM(f.order_amount) AS GMV FROM fact_order f JOIN dim_region r ON f.region_id = r.region_id JOIN dim_product d ON f.product_id = d.product_id WHERE r.region_name = '华东' GROUP BY d.brand",
+    "reference_sql": "SELECT p.brand, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nJOIN dim_region AS r ON f.region_id = r.region_id\nWHERE r.region_name = '华东'\nGROUP BY p.brand;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "品牌": "华为",
+        "GMV": 27996.0
+      },
+      {
+        "品牌": "雀巢",
+        "GMV": 650.0
+      },
+      {
+        "品牌": "亚马逊",
+        "GMV": 4197.0
+      },
+      {
+        "品牌": "三星",
+        "GMV": 28497.0
+      },
+      {
+        "品牌": "阿迪达斯",
+        "GMV": 2598.0
+      },
+      {
+        "品牌": "戴森",
+        "GMV": 10998.0
+      },
+      {
+        "品牌": "苹果",
+        "GMV": 17998.0
+      },
+      {
+        "品牌": "耐克",
+        "GMV": 1798.0
+      },
+      {
+        "品牌": "蒙牛",
+        "GMV": 225.0
+      },
+      {
+        "品牌": "李维斯",
+        "GMV": 2396.0
+      },
+      {
+        "品牌": "乐事",
+        "GMV": 175.0
+      },
+      {
+        "品牌": "优衣库",
+        "GMV": 398.0
+      },
+      {
+        "品牌": "Instant Pot",
+        "GMV": 2697.0
+      },
+      {
+        "品牌": "美的",
+        "GMV": 6400.0
+      },
+      {
+        "品牌": "奥利奥",
+        "GMV": 350.0
+      }
+    ],
+    "reference_result": [
+      {
+        "brand": "华为",
+        "gmv": 27996.0
+      },
+      {
+        "brand": "雀巢",
+        "gmv": 650.0
+      },
+      {
+        "brand": "亚马逊",
+        "gmv": 4197.0
+      },
+      {
+        "brand": "三星",
+        "gmv": 28497.0
+      },
+      {
+        "brand": "阿迪达斯",
+        "gmv": 2598.0
+      },
+      {
+        "brand": "戴森",
+        "gmv": 10998.0
+      },
+      {
+        "brand": "苹果",
+        "gmv": 17998.0
+      },
+      {
+        "brand": "耐克",
+        "gmv": 1798.0
+      },
+      {
+        "brand": "蒙牛",
+        "gmv": 225.0
+      },
+      {
+        "brand": "李维斯",
+        "gmv": 2396.0
+      },
+      {
+        "brand": "乐事",
+        "gmv": 175.0
+      },
+      {
+        "brand": "优衣库",
+        "gmv": 398.0
+      },
+      {
+        "brand": "Instant Pot",
+        "gmv": 2697.0
+      },
+      {
+        "brand": "美的",
+        "gmv": 6400.0
+      },
+      {
+        "brand": "奥利奥",
+        "gmv": 350.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_region",
+      "fact_order",
+      "dim_date",
+      "dim_product"
+    ],
+    "retrieved_column_ids": [
+      "dim_region.region_name",
+      "dim_region.province",
+      "dim_region.country",
+      "dim_region.region_id",
+      "fact_order.region_id",
+      "dim_date.year",
+      "dim_date.month",
+      "fact_order.date_id",
+      "dim_date.date_id",
+      "dim_product.brand",
+      "dim_product.category",
+      "dim_product.product_name",
+      "dim_product.product_id",
+      "fact_order.product_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_region.region_name.华东"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": false,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": false,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "filter",
+      "brand",
+      "region",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q015_distinct_customers_north_china",
+    "question": "华北地区下单用户数有多少？",
+    "generated_sql": "SELECT COUNT(DISTINCT fo.customer_id) AS 华北地区下单用户数 FROM fact_order fo JOIN dim_region dr ON fo.region_id = dr.region_id WHERE dr.region_name = '华北'",
+    "reference_sql": "SELECT COUNT(DISTINCT f.customer_id) AS customer_count\nFROM fact_order AS f\nJOIN dim_region AS r ON f.region_id = r.region_id\nWHERE r.region_name = '华北';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "华北地区下单用户数": 3
+      }
+    ],
+    "reference_result": [
+      {
+        "customer_count": 3
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_customer",
+      "fact_order",
+      "dim_region",
+      "dim_date",
+      "dim_product"
+    ],
+    "retrieved_column_ids": [
+      "dim_customer.member_level",
+      "dim_customer.customer_id",
+      "fact_order.customer_id",
+      "dim_customer.customer_name",
+      "fact_order.order_quantity",
+      "dim_region.region_name",
+      "dim_region.province",
+      "dim_region.country",
+      "dim_region.region_id",
+      "fact_order.region_id",
+      "dim_date.year",
+      "dim_date.month",
+      "fact_order.date_id",
+      "dim_date.date_id",
+      "fact_order.order_amount",
+      "fact_order.order_id",
+      "dim_date.day",
+      "dim_product.product_id",
+      "fact_order.product_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_region.region_name.华北"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "region",
+      "distinct_user"
+    ]
+  },
+  {
+    "case_id": "q016_quantity_silver_members",
+    "question": "白银会员贡献的销量是多少？",
+    "generated_sql": "SELECT SUM(f.order_quantity) AS 白银会员贡献的销量 FROM fact_order f JOIN dim_customer d ON f.customer_id = d.customer_id WHERE d.member_level = '白银'",
+    "reference_sql": "SELECT SUM(f.order_quantity) AS total_quantity\nFROM fact_order AS f\nJOIN dim_customer AS c ON f.customer_id = c.customer_id\nWHERE c.member_level = '白银';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "白银会员贡献的销量": "183"
+      }
+    ],
+    "reference_result": [
+      {
+        "total_quantity": "183"
+      }
+    ],
+    "retrieved_table_ids": [
+      "fact_order",
+      "dim_customer",
+      "dim_region",
+      "dim_date"
+    ],
+    "retrieved_column_ids": [
+      "fact_order.order_amount",
+      "dim_customer.member_level",
+      "dim_region.province",
+      "dim_date.date_id",
+      "fact_order.date_id",
+      "fact_order.order_quantity"
+    ],
+    "retrieved_metric_ids": [
+      "GMV"
+    ],
+    "retrieved_value_ids": [
+      "dim_customer.member_level.白银"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "member_level",
+      "quantity"
+    ]
+  },
+  {
+    "case_id": "q017_gmv_by_quarter",
+    "question": "按季度统计GMV。",
+    "generated_sql": "SELECT d.quarter AS 季度, SUM(f.order_amount) AS GMV FROM fact_order f JOIN dim_date d ON f.date_id = d.date_id GROUP BY d.quarter ORDER BY d.quarter",
+    "reference_sql": "SELECT d.quarter, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_date AS d ON f.date_id = d.date_id\nGROUP BY d.quarter;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "季度": "Q1",
+        "GMV": 279159.5
+      }
+    ],
+    "reference_result": [
+      {
+        "quarter": "Q1",
+        "gmv": 279159.5
+      }
+    ],
+    "retrieved_table_ids": [
+      "fact_order",
+      "dim_date",
+      "dim_region"
+    ],
+    "retrieved_column_ids": [
+      "fact_order.date_id",
+      "fact_order.order_amount",
+      "fact_order.order_id",
+      "dim_date.date_id",
+      "fact_order.order_quantity",
+      "dim_region.province",
+      "dim_date.quarter",
+      "dim_date.month"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "time",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q018_top3_provinces_by_gmv",
+    "question": "按GMV排序，省份前三名是什么？",
+    "generated_sql": "SELECT d.province AS 省份, SUM(f.order_amount) AS GMV FROM fact_order f JOIN dim_region d ON f.region_id = d.region_id GROUP BY d.province ORDER BY GMV DESC LIMIT 3",
+    "reference_sql": "SELECT r.province, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_region AS r ON f.region_id = r.region_id\nGROUP BY r.province\nORDER BY gmv DESC\nLIMIT 3;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "省份": "广东省",
+        "GMV": 70202.0
+      },
+      {
+        "省份": "上海市",
+        "GMV": 60210.0
+      },
+      {
+        "省份": "浙江省",
+        "GMV": 47163.0
+      }
+    ],
+    "reference_result": [
+      {
+        "province": "广东省",
+        "gmv": 70202.0
+      },
+      {
+        "province": "上海市",
+        "gmv": 60210.0
+      },
+      {
+        "province": "浙江省",
+        "gmv": 47163.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_region",
+      "dim_date",
+      "dim_customer",
+      "fact_order",
+      "dim_product"
+    ],
+    "retrieved_column_ids": [
+      "dim_region.province",
+      "dim_region.region_name",
+      "dim_region.country",
+      "dim_date.year",
+      "dim_date.month",
+      "dim_customer.gender",
+      "dim_date.date_id",
+      "fact_order.date_id",
+      "dim_product.category",
+      "fact_order.order_quantity",
+      "fact_order.order_id",
+      "fact_order.order_amount"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_product.brand.三星"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "topn",
+      "region",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q019_gmv_huawei_brand_q1",
+    "question": "Q1 华为品牌的GMV是多少？",
+    "generated_sql": "SELECT SUM(fo.order_amount) AS GMV FROM fact_order fo JOIN dim_product dp ON fo.product_id = dp.product_id WHERE dp.brand = '华为'",
+    "reference_sql": "SELECT SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_product AS p ON f.product_id = p.product_id\nJOIN dim_date AS d ON f.date_id = d.date_id\nWHERE p.brand = '华为' AND d.quarter = 'Q1';\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": true,
+    "alias_consistent": true,
+    "generated_result": [
+      {
+        "GMV": 55992.0
+      }
+    ],
+    "reference_result": [
+      {
+        "gmv": 55992.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_date",
+      "fact_order",
+      "dim_product"
+    ],
+    "retrieved_column_ids": [
+      "dim_date.date_id",
+      "fact_order.date_id",
+      "dim_product.brand",
+      "dim_product.category",
+      "dim_product.product_name",
+      "dim_product.product_id",
+      "fact_order.product_id"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_product.brand.华为",
+      "dim_date.quarter.Q1"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": false,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": false,
+    "error_message": null,
+    "tags": [
+      "filter",
+      "time",
+      "brand",
+      "gmv"
+    ]
+  },
+  {
+    "case_id": "q020_top3_member_levels_by_gmv",
+    "question": "按GMV排序，会员等级前三名是什么？",
+    "generated_sql": "SELECT c.member_level AS 会员等级, SUM(f.order_amount) AS GMV FROM dim_customer c JOIN fact_order f ON c.customer_id = f.customer_id GROUP BY c.member_level ORDER BY GMV DESC LIMIT 3",
+    "reference_sql": "SELECT c.member_level, SUM(f.order_amount) AS gmv\nFROM fact_order AS f\nJOIN dim_customer AS c ON f.customer_id = c.customer_id\nGROUP BY c.member_level\nORDER BY gmv DESC\nLIMIT 3;\n",
+    "execution_success": true,
+    "sql_correct": true,
+    "strict_sql_correct": false,
+    "alias_consistent": false,
+    "generated_result": [
+      {
+        "会员等级": "黄金",
+        "GMV": 100178.5
+      },
+      {
+        "会员等级": "白银",
+        "GMV": 71094.0
+      },
+      {
+        "会员等级": "铂金",
+        "GMV": 57679.0
+      }
+    ],
+    "reference_result": [
+      {
+        "member_level": "黄金",
+        "gmv": 100178.5
+      },
+      {
+        "member_level": "白银",
+        "gmv": 71094.0
+      },
+      {
+        "member_level": "铂金",
+        "gmv": 57679.0
+      }
+    ],
+    "retrieved_table_ids": [
+      "dim_customer",
+      "dim_region",
+      "dim_product",
+      "fact_order"
+    ],
+    "retrieved_column_ids": [
+      "dim_customer.member_level",
+      "dim_region.province",
+      "dim_product.category",
+      "fact_order.order_quantity",
+      "fact_order.order_id",
+      "fact_order.order_amount"
+    ],
+    "retrieved_metric_ids": [
+      "GMV",
+      "AOV"
+    ],
+    "retrieved_value_ids": [
+      "dim_product.brand.三星"
+    ],
+    "table_recall_hit": true,
+    "column_recall_hit": true,
+    "metric_recall_hit": true,
+    "value_recall_hit": true,
+    "full_recall_hit": true,
+    "error_message": null,
+    "tags": [
+      "group_by",
+      "topn",
+      "member_level",
+      "gmv"
+    ]
+  }
+]
