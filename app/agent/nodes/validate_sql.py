@@ -5,12 +5,21 @@ SQL 校验节点
 校验结果不在这里决定流程走向，而是通过 state["error"] 交给 graph.py 的条件边判断
 """
 
-from langgraph.runtime import Runtime
+from __future__ import annotations
 
-from app.agent.context import DataAgentContext
+from typing import TYPE_CHECKING, Any
+
 from app.agent.state import DataAgentState
 from app.core.log import logger
+from app.core.sql_guard import SQLSafetyError
 from app.repositories.mysql.dw.dw_mysql_repository import DWMySQLRepository
+
+if TYPE_CHECKING:
+    from app.agent.context import DataAgentContext
+    from langgraph.runtime import Runtime
+else:
+    Runtime = Any
+    DataAgentContext = Any
 
 
 async def validate_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]):
@@ -33,6 +42,9 @@ async def validate_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]
             writer({"type": "progress", "step": step, "status": "success"})
             logger.info("SQL语法正确")
             return {"error": None}
+        except SQLSafetyError:
+            logger.warning("SQL安全校验未通过")
+            raise
         except Exception as e:
             # 不抛出异常中断图执行，而是把错误写入状态，供条件分支进入 correct_sql
             logger.info(f"SQL语法错误：{str(e)}")

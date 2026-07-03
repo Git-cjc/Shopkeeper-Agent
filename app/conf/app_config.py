@@ -12,6 +12,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from omegaconf import OmegaConf
 
+from app.core.sql_guard import SQLGuardConfig
+
 
 @dataclass
 class File:
@@ -94,6 +96,7 @@ class AppConfig:
     logging: LoggingConfig
     db_meta: DBConfig
     db_dw: DBConfig
+    sql_guard: SQLGuardConfig
     qdrant: QdrantConfig
     embedding: EmbeddingConfig
     es: ESConfig

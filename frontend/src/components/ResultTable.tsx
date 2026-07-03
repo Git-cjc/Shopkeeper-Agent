@@ -4,6 +4,16 @@
  */
 import { Database, FileJson } from "lucide-react";
 
+const COLUMN_LABELS: Record<string, string> = {
+  order_id: "订单编号",
+  customer_id: "客户编号",
+  product_id: "商品编号",
+  date_id: "日期编号",
+  region_id: "地区编号",
+  order_quantity: "下单数量",
+  order_amount: "订单金额",
+};
+
 function normalizeRows(data: unknown): Array<Record<string, unknown>> {
   if (Array.isArray(data)) {
     return data.map((item, index) =>
@@ -24,6 +34,10 @@ function formatCell(value: unknown) {
   if (value === null || value === undefined) return "-";
   if (typeof value === "object") return JSON.stringify(value);
   return String(value);
+}
+
+function formatColumnLabel(column: string) {
+  return COLUMN_LABELS[column] ?? column;
 }
 
 export function ResultTable({ data }: { data: unknown }) {
@@ -61,7 +75,7 @@ export function ResultTable({ data }: { data: unknown }) {
                   scope="col"
                   className="border-b border-ink/10 px-4 py-3 font-semibold text-ink/70"
                 >
-                  {column}
+                  {formatColumnLabel(column)}
                 </th>
               ))}
             </tr>

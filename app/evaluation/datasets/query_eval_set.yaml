@@ -1,0 +1,283 @@
+cases:
+  - case_id: q001_total_gmv
+    question: 总GMV是多少？
+    reference_sql: |
+      SELECT SUM(order_amount) AS gmv
+      FROM fact_order;
+    expected_tables: [fact_order]
+    expected_columns: [fact_order.order_amount]
+    expected_metrics: [GMV]
+    expected_values: []
+    tags: [aggregate, metric, gmv]
+
+  - case_id: q002_total_sales_quantity
+    question: 总销量是多少？
+    reference_sql: |
+      SELECT SUM(order_quantity) AS total_quantity
+      FROM fact_order;
+    expected_tables: [fact_order]
+    expected_columns: [fact_order.order_quantity]
+    expected_metrics: []
+    expected_values: []
+    tags: [aggregate, quantity]
+
+  - case_id: q003_distinct_customer_count
+    question: 下单用户数有多少？
+    reference_sql: |
+      SELECT COUNT(DISTINCT customer_id) AS customer_count
+      FROM fact_order;
+    expected_tables: [fact_order]
+    expected_columns: [fact_order.customer_id]
+    expected_metrics: []
+    expected_values: []
+    tags: [aggregate, distinct_user]
+
+  - case_id: q004_gmv_east_china
+    question: 华东地区的GMV是多少？
+    reference_sql: |
+      SELECT SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_region AS r ON f.region_id = r.region_id
+      WHERE r.region_name = '华东';
+    expected_tables: [fact_order, dim_region]
+    expected_columns: [fact_order.order_amount, dim_region.region_name]
+    expected_metrics: [GMV]
+    expected_values: [dim_region.region_name.华东]
+    tags: [filter, region, gmv]
+
+  - case_id: q005_gmv_gold_members
+    question: 黄金会员的GMV是多少？
+    reference_sql: |
+      SELECT SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_customer AS c ON f.customer_id = c.customer_id
+      WHERE c.member_level = '黄金';
+    expected_tables: [fact_order, dim_customer]
+    expected_columns: [fact_order.order_amount, dim_customer.member_level]
+    expected_metrics: [GMV]
+    expected_values: [dim_customer.member_level.黄金]
+    tags: [filter, member_level, gmv]
+
+  - case_id: q006_gmv_apple_brand
+    question: 苹果品牌的GMV是多少？
+    reference_sql: |
+      SELECT SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      WHERE p.brand = '苹果';
+    expected_tables: [fact_order, dim_product]
+    expected_columns: [fact_order.order_amount, dim_product.brand]
+    expected_metrics: [GMV]
+    expected_values: [dim_product.brand.苹果]
+    tags: [filter, brand, gmv]
+
+  - case_id: q007_gmv_phone_category
+    question: 手机数码品类的GMV是多少？
+    reference_sql: |
+      SELECT SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      WHERE p.category = '手机数码';
+    expected_tables: [fact_order, dim_product]
+    expected_columns: [fact_order.order_amount, dim_product.category]
+    expected_metrics: [GMV]
+    expected_values: [dim_product.category.手机数码]
+    tags: [filter, category, gmv]
+
+  - case_id: q008_top3_brands_by_gmv
+    question: 按GMV排序，品牌前三名是什么？
+    reference_sql: |
+      SELECT p.brand, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      GROUP BY p.brand
+      ORDER BY gmv DESC
+      LIMIT 3;
+    expected_tables: [fact_order, dim_product]
+    expected_columns: [fact_order.order_amount, dim_product.brand]
+    expected_metrics: [GMV]
+    expected_values: []
+    tags: [group_by, topn, brand, gmv]
+
+  - case_id: q009_top5_categories_by_quantity
+    question: 按销量排序，品类前五名是什么？
+    reference_sql: |
+      SELECT p.category, SUM(f.order_quantity) AS total_quantity
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      GROUP BY p.category
+      ORDER BY total_quantity DESC
+      LIMIT 5;
+    expected_tables: [fact_order, dim_product]
+    expected_columns: [fact_order.order_quantity, dim_product.category]
+    expected_metrics: []
+    expected_values: []
+    tags: [group_by, topn, category, quantity]
+
+  - case_id: q010_gmv_q1_by_region
+    question: 统计 Q1 各地区的GMV。
+    reference_sql: |
+      SELECT r.region_name, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_region AS r ON f.region_id = r.region_id
+      JOIN dim_date AS d ON f.date_id = d.date_id
+      WHERE d.quarter = 'Q1'
+      GROUP BY r.region_name;
+    expected_tables: [fact_order, dim_date, dim_region]
+    expected_columns:
+      - fact_order.order_amount
+      - dim_date.quarter
+      - dim_region.region_name
+    expected_metrics: [GMV]
+    expected_values: [dim_date.quarter.Q1]
+    tags: [group_by, time, region, gmv]
+
+  - case_id: q011_distinct_customers_by_member_level
+    question: 按会员等级统计下单用户数。
+    reference_sql: |
+      SELECT c.member_level, COUNT(DISTINCT f.customer_id) AS customer_count
+      FROM fact_order AS f
+      JOIN dim_customer AS c ON f.customer_id = c.customer_id
+      GROUP BY c.member_level;
+    expected_tables: [fact_order, dim_customer]
+    expected_columns: [fact_order.customer_id, dim_customer.member_level]
+    expected_metrics: []
+    expected_values: []
+    tags: [group_by, member_level, distinct_user]
+
+  - case_id: q012_quantity_by_category
+    question: 按品类统计销量。
+    reference_sql: |
+      SELECT p.category, SUM(f.order_quantity) AS total_quantity
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      GROUP BY p.category;
+    expected_tables: [fact_order, dim_product]
+    expected_columns: [fact_order.order_quantity, dim_product.category]
+    expected_metrics: []
+    expected_values: []
+    tags: [group_by, category, quantity]
+
+  - case_id: q013_top2_regions_by_gmv_q1
+    question: Q1 的 GMV 最高的两个地区是哪里？
+    reference_sql: |
+      SELECT r.region_name, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_region AS r ON f.region_id = r.region_id
+      JOIN dim_date AS d ON f.date_id = d.date_id
+      WHERE d.quarter = 'Q1'
+      GROUP BY r.region_name
+      ORDER BY gmv DESC
+      LIMIT 2;
+    expected_tables: [fact_order, dim_date, dim_region]
+    expected_columns:
+      - fact_order.order_amount
+      - dim_date.quarter
+      - dim_region.region_name
+    expected_metrics: [GMV]
+    expected_values: [dim_date.quarter.Q1]
+    tags: [topn, time, region, gmv]
+
+  - case_id: q014_gmv_by_brand_in_east_china
+    question: 华东地区各品牌的GMV分别是多少？
+    reference_sql: |
+      SELECT p.brand, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      JOIN dim_region AS r ON f.region_id = r.region_id
+      WHERE r.region_name = '华东'
+      GROUP BY p.brand;
+    expected_tables: [fact_order, dim_product, dim_region]
+    expected_columns:
+      - fact_order.order_amount
+      - dim_product.brand
+      - dim_region.region_name
+    expected_metrics: [GMV]
+    expected_values: [dim_region.region_name.华东]
+    tags: [group_by, filter, brand, region, gmv]
+
+  - case_id: q015_distinct_customers_north_china
+    question: 华北地区下单用户数有多少？
+    reference_sql: |
+      SELECT COUNT(DISTINCT f.customer_id) AS customer_count
+      FROM fact_order AS f
+      JOIN dim_region AS r ON f.region_id = r.region_id
+      WHERE r.region_name = '华北';
+    expected_tables: [fact_order, dim_region]
+    expected_columns: [fact_order.customer_id, dim_region.region_name]
+    expected_metrics: []
+    expected_values: [dim_region.region_name.华北]
+    tags: [filter, region, distinct_user]
+
+  - case_id: q016_quantity_silver_members
+    question: 白银会员贡献的销量是多少？
+    reference_sql: |
+      SELECT SUM(f.order_quantity) AS total_quantity
+      FROM fact_order AS f
+      JOIN dim_customer AS c ON f.customer_id = c.customer_id
+      WHERE c.member_level = '白银';
+    expected_tables: [fact_order, dim_customer]
+    expected_columns: [fact_order.order_quantity, dim_customer.member_level]
+    expected_metrics: []
+    expected_values: [dim_customer.member_level.白银]
+    tags: [filter, member_level, quantity]
+
+  - case_id: q017_gmv_by_quarter
+    question: 按季度统计GMV。
+    reference_sql: |
+      SELECT d.quarter, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_date AS d ON f.date_id = d.date_id
+      GROUP BY d.quarter;
+    expected_tables: [fact_order, dim_date]
+    expected_columns: [fact_order.order_amount, dim_date.quarter]
+    expected_metrics: [GMV]
+    expected_values: []
+    tags: [group_by, time, gmv]
+
+  - case_id: q018_top3_provinces_by_gmv
+    question: 按GMV排序，省份前三名是什么？
+    reference_sql: |
+      SELECT r.province, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_region AS r ON f.region_id = r.region_id
+      GROUP BY r.province
+      ORDER BY gmv DESC
+      LIMIT 3;
+    expected_tables: [fact_order, dim_region]
+    expected_columns: [fact_order.order_amount, dim_region.province]
+    expected_metrics: [GMV]
+    expected_values: []
+    tags: [group_by, topn, region, gmv]
+
+  - case_id: q019_gmv_huawei_brand_q1
+    question: Q1 华为品牌的GMV是多少？
+    reference_sql: |
+      SELECT SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_product AS p ON f.product_id = p.product_id
+      JOIN dim_date AS d ON f.date_id = d.date_id
+      WHERE p.brand = '华为' AND d.quarter = 'Q1';
+    expected_tables: [fact_order, dim_product, dim_date]
+    expected_columns:
+      - fact_order.order_amount
+      - dim_product.brand
+      - dim_date.quarter
+    expected_metrics: [GMV]
+    expected_values: [dim_product.brand.华为, dim_date.quarter.Q1]
+    tags: [filter, time, brand, gmv]
+
+  - case_id: q020_top3_member_levels_by_gmv
+    question: 按GMV排序，会员等级前三名是什么？
+    reference_sql: |
+      SELECT c.member_level, SUM(f.order_amount) AS gmv
+      FROM fact_order AS f
+      JOIN dim_customer AS c ON f.customer_id = c.customer_id
+      GROUP BY c.member_level
+      ORDER BY gmv DESC
+      LIMIT 3;
+    expected_tables: [fact_order, dim_customer]
+    expected_columns: [fact_order.order_amount, dim_customer.member_level]
+    expected_metrics: [GMV]
+    expected_values: []
+    tags: [group_by, topn, member_level, gmv]
